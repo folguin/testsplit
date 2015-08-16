@@ -1,0 +1,21 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/13-View
+
+default:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    title:        Divideme
+    description:  Sitio para dividir cuentas grupales
+    #keywords:     symfony, project
+    language:     es
+    #robots:       index, follow
+    charset:    utf-8
+
+  stylesheets:    [main.css]
+
+  javascripts:    [jquery.min.js,jquery.dropotron.min.js,skel.min.js,skel-viewport.min.js,util.js,respond.min.js,main.js]
+
+  has_layout:     true
+  layout:         layout
