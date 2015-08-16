@@ -236,46 +236,54 @@ class General{
 	}
 	
 	public function uploadOCR(){
-		$general= new General();
-		$log=$general->setLog("uploadOCR","NewOCR");
-		$this->file = realpath($this->file);
-		$log->debug("Envio el archivo ".$this->file);
-	  	$ch = curl_init();
-		$key="c65d40da61f841c65157947e081cff8a";
-		$url="http://api.newocr.com/v1/upload?key=".$key;
-		$log->debug("Url Upload: ".$url);
-	  	curl_setopt($ch, CURLOPT_URL, $url);
-	  	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	  	curl_setopt($ch, CURLOPT_POST, TRUE);
-	  	curl_setopt($ch, CURLOPT_POSTFIELDS, array('file' => '@'.$this->file));
-	  	$result_aux = curl_exec($ch);
-		$result=json_decode($result_aux);
-		$log->debug("result--- ".print_r($result,true));
-		$this->fileId=$result->data->file_id;
-		$log->debug("Result file_id: ".$this->fileId);
-	  	curl_close ($ch);
-		$this->getContentOCR();
-		$log->debug("String obtenido: ".$this->data);
-		return $this->data;
+		try {		
+			$general= new General();
+			$log=$general->setLog("uploadOCR","NewOCR");
+			$this->file = realpath($this->file);
+			$log->debug("Envio el archivo ".$this->file);
+		  	$ch = curl_init();
+			$key="c65d40da61f841c65157947e081cff8a";
+			$url="http://api.newocr.com/v1/upload?key=".$key;
+			$log->debug("Url Upload: ".$url);
+		  	curl_setopt($ch, CURLOPT_URL, $url);
+		  	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		  	curl_setopt($ch, CURLOPT_POST, TRUE);
+		  	curl_setopt($ch, CURLOPT_POSTFIELDS, array('file' => '@'.$this->file));
+		  	$result_aux = curl_exec($ch);
+			$result=json_decode($result_aux);
+			$log->debug("result--- ".print_r($result,true));
+			$this->fileId=$result->data->file_id;
+			$log->debug("Result file_id: ".$this->fileId);
+		  	curl_close ($ch);
+			$this->getContentOCR();
+			$log->debug("String obtenido: ".$this->data);
+			return $this->data;
+		} catch (Exception $e) {
+			$log->err("Ha ocurrido un error ".$e->getMessage());
+		}
 	}
 	
 	private function getContentOCR(){
-		$general= new General();
-		$log=$general->setLog("getContentOCR","NewOCR");
-		$key="c65d40da61f841c65157947e081cff8a";
-		$url2="http://api.newocr.com/v1/ocr?key=".$key."&file_id=".$this->fileId."&page=1&lang=spa&psm=6";
-		$log->debug("Url getContentOCR ".$url2);
-		$ch2 = curl_init($url2);
-	  	curl_setopt($ch2, CURLOPT_RETURNTRANSFER, TRUE);		
-	  	curl_setopt($ch2, CURLOPT_HEADER, 0);
-	  	$result2 = curl_exec($ch2);
-	  	curl_close($ch2);
-		$log->debug("Retorno getContentOCR ".print_r($result2, true));
-		$result2=json_decode($result2);
-		$log->debug("result content ".print_r($result2,true));
-		$this->data=$result2->data->text;
-		$log->debug("this->data ".print_r($this->data,true));
-	  	//return $result;	
+		try {		
+			$general= new General();
+			$log=$general->setLog("getContentOCR","NewOCR");
+			$key="c65d40da61f841c65157947e081cff8a";
+			$url2="http://api.newocr.com/v1/ocr?key=".$key."&file_id=".$this->fileId."&page=1&lang=spa&psm=6";
+			$log->debug("Url getContentOCR ".$url2);
+			$ch2 = curl_init($url2);
+		  	curl_setopt($ch2, CURLOPT_RETURNTRANSFER, TRUE);		
+		  	curl_setopt($ch2, CURLOPT_HEADER, 0);
+		  	$result2 = curl_exec($ch2);
+		  	curl_close($ch2);
+			$log->debug("Retorno getContentOCR ".print_r($result2, true));
+			$result2=json_decode($result2);
+			$log->debug("result content ".print_r($result2,true));
+			$this->data=$result2->data->text;
+			$log->debug("this->data ".print_r($this->data,true));
+		  	//return $result
+		} catch (Exception $e) {
+			$log->err("Ha ocurrido un error ".$e->getMessage());
+		}	
 	}
 /*	
 	public function uploadFile($archivo){
